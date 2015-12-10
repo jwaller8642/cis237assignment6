@@ -6,6 +6,26 @@
 
 <h2>Index</h2>
 
+<div class =" form-group">
+    <fieldset>
+        <legend>Search Filter</legend>
+        @{
+            using (Html.BeginForm("Filter", "Beverage", FormMethod.Post, new { @class = "form-inline" }))
+            {
+                @Html.AntiForgeryToken()
+            <label for="Id">Id</label>
+            @Html.TextBox("id");
+             <label for="name">Name</label>
+            @Html.TextBox("name");
+             <label for="pack">Pack</label>
+            @Html.TextBox("pack");
+            <br/>
+            <input type="submit" value="Filter" class="btn btn-info pull-right"/>  
+            }
+        }
+    </fieldset>
+</div>
+
 <p>
     @Html.ActionLink("Create New", "Create")
 </p>

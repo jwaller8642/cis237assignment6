@@ -18,6 +18,12 @@ namespace cis237Assignment6.Controllers
         // GET: /Beverage/
         public ActionResult Index()
         {
+
+            DbSet<Beverage> BevtoSearch = db.Beverages;
+
+            string filterName = "";
+            string filterPack = "";
+
             return View(db.Beverages.ToList());
         }
 
@@ -123,6 +129,20 @@ namespace cis237Assignment6.Controllers
                 db.Dispose();
             }
             base.Dispose(disposing);
+        }
+        [HttpPost, ActionName("Filter")]
+        [ValidateAntiForgeryToken]
+        public ActionResult Filter()
+        {
+            String id = Request.Form.Get("id");
+            String name = Request.Form.Get("name");
+            String pack = Request.Form.Get("pack");
+
+            Session["id"] = id;
+            Session[name] = name;
+            Session[pack] = pack;
+            return RedirectToAction("Index");
+            //return Content("Controller Method is Firing");
         }
     }
 }
