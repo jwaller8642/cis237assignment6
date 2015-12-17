@@ -26,5 +26,11 @@ namespace cis237Assignment6.Controllers
 
             return View();
         }
+
+        public ActionResult Foo()
+        {
+            ViewBag.Message = "Foo java";
+            return View();
+        }
     }
 }

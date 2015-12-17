@@ -20,11 +20,41 @@ namespace cis237Assignment6.Controllers
         {
 
             DbSet<Beverage> BevtoSearch = db.Beverages;
-
             string filterName = "";
-            string filterPack = "";
+            string filterMin = "";
+            string filterMax = "";
 
-            return View(db.Beverages.ToList());
+            int min = 0;
+            int max = 80;
+
+
+            if (Session["name"] != null && !String.IsNullOrWhiteSpace((string)Session["name"]))
+            {
+                filterName = (string)Session["name"];
+            }
+
+            if (Session["min"] != null && !String.IsNullOrWhiteSpace((string)Session["min"]))
+            {
+                filterMin = ( string)Session["min"];
+                min = Int32.Parse(filterMin);
+            }
+
+            if (Session["max"] != null && !String.IsNullOrWhiteSpace((string)Session["max"]))
+            {
+                filterMax = (string)Session["max"];
+                max = Int32.Parse(filterMax);
+            }
+
+            IEnumerable<Beverage> filterd = BevtoSearch.Where(beverage => beverage.price >= min && beverage.price <= max && beverage.name.Contains(filterName));
+
+            IEnumerable<Beverage> finalFilter = filterd.ToList();
+
+            ViewBag.filterName = filterName;
+            ViewBag.filterMin = filterMin;
+            ViewBag.filterMax = filterMax;
+
+            return View(finalFilter);
+            //return View(db.Beverages.ToList());
         }
 
         // GET: /Beverage/Details/5
@@ -130,17 +160,18 @@ namespace cis237Assignment6.Controllers
             }
             base.Dispose(disposing);
         }
+
         [HttpPost, ActionName("Filter")]
         [ValidateAntiForgeryToken]
         public ActionResult Filter()
         {
-            String id = Request.Form.Get("id");
-            String name = Request.Form.Get("name");
-            String pack = Request.Form.Get("pack");
+           
+            String min = Request.Form.Get("min");
+            String max = Request.Form.Get("max");
 
-            Session["id"] = id;
-            Session[name] = name;
-            Session[pack] = pack;
+            
+            Session["min"] = min;
+            Session["max"] = max;
             return RedirectToAction("Index");
             //return Content("Controller Method is Firing");
         }
