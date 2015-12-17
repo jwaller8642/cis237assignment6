@@ -10,7 +10,7 @@ using cis237Assignment6.Models;
 
 namespace cis237Assignment6.Controllers
 {
-    [Authorize]
+    [Authorize] // Dosent allow the user to go to the beverage page if user knows the path
     public class BeverageController : Controller
     {
         private BeverageJWallerEntities db = new BeverageJWallerEntities();
@@ -18,16 +18,18 @@ namespace cis237Assignment6.Controllers
         // GET: /Beverage/
         public ActionResult Index()
         {
-
+            // Filter that we made in class
+            //Hold data that the might be in the session 
             DbSet<Beverage> BevtoSearch = db.Beverages;
             string filterName = "";
             string filterMin = "";
             string filterMax = "";
 
+            //min and max price
             int min = 0;
-            int max = 80;
+            int max = 1000;
 
-
+            // checks the session and and assigns a variable
             if (Session["name"] != null && !String.IsNullOrWhiteSpace((string)Session["name"]))
             {
                 filterName = (string)Session["name"];
@@ -44,11 +46,12 @@ namespace cis237Assignment6.Controllers
                 filterMax = (string)Session["max"];
                 max = Int32.Parse(filterMax);
             }
-
+            // goes throug the wine db and pull out the wine withe the prices that are between the min and max
             IEnumerable<Beverage> filterd = BevtoSearch.Where(beverage => beverage.price >= min && beverage.price <= max && beverage.name.Contains(filterName));
-
+            //converts db to a list
             IEnumerable<Beverage> finalFilter = filterd.ToList();
 
+            // places the session value into the veiw basg so the user can see
             ViewBag.filterName = filterName;
             ViewBag.filterMin = filterMin;
             ViewBag.filterMax = filterMax;
@@ -165,11 +168,12 @@ namespace cis237Assignment6.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Filter()
         {
-           
+            // gets the form data that was sent out of the request object
+            String name = Request.Form.Get("name");
             String min = Request.Form.Get("min");
             String max = Request.Form.Get("max");
-
-            
+            //stores data in session so we can use it later
+            Session["name"] = name;
             Session["min"] = min;
             Session["max"] = max;
             return RedirectToAction("Index");

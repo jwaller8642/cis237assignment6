@@ -24,9 +24,9 @@
                     <li>@Html.ActionLink("Home", "Index", "Home")</li>
                     <li>@Html.ActionLink("About", "About", "Home")</li>
                     <li>@Html.ActionLink("Contact", "Contact", "Home")</li>
-                        @if (Request.IsAuthenticated)
+                        @if (Request.IsAuthenticated) <!--This makes sure that the  user is loged in before viewing these two pages-->
                         { 
-                        <li>@Html.ActionLink("Beverages", "Index", "Beverage")</li>
+                        <li>@Html.ActionLink("Beverages", "Index", "Beverage")</li> 
                         <li>@Html.ActionLink("Java", "Foo", "Home")</li>
                         }
                     
